@@ -1,0 +1,22 @@
+dons / credits 
+   - regles :
+       - règles différentes (don ≠ crédit)
+       - remboursement automatique (crédit)
+       - statistiques par type
+       - plafond par employé
+
+demande de crédit
+    - Créer une demande de crédit avec :
+       - employé
+       - type (don / crédit)
+       - montant (avec validation max)
+       - motif
+       - justificatif
+       - statut automatique = brouillon
+
+
+       --------------
+ credit
+    - Validé une demande de credit apartire d'un crédit social (ou le contraire créer directement un credit apartire d'une demande validé )
+    - 
+    - 
