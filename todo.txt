@@ -1,0 +1,33 @@
+dons / credits 
+   - regles :
+       - règles différentes (don ≠ crédit)
+       - remboursement automatique (crédit)
+       - statistiques par type
+       - plafond par employé
+
+demande de crédit
+    - Créer une demande de crédit avec :
+       - employé
+       - type (don / crédit)
+       - montant (avec validation max)
+       - motif
+       - justificatif
+       - statut automatique = brouillon
+
+
+       --------------
+ credit
+    - Validé une demande de credit apartire d'un crédit social (ou le contraire créer directement un credit apartire d'une demande validé )
+    - amount_retenu le montant de retenu par mois
+    - génération du contrat
+
+---------------------------
+relevé ou compte :
+    - voici un une explication d'opérations resumé en tablau  
+      
+
+| libelé                  | opérations    | date operation     |
+| ----------------------- | ------------- | -------------------|
+| don pour le compte 2215 |  debit        |                    |
+| virement ref 12569      | `credit`      | 30/01/2026         |
+
