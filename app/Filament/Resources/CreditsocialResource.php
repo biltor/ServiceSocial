@@ -16,6 +16,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Wizard\Step;
+use Filament\Forms\Components\Section;
+use Carbon\Carbon;
+use Filament\Tables\Actions\Action;
 
 class CreditsocialResource extends Resource
 {
@@ -28,100 +33,141 @@ class CreditsocialResource extends Resource
     {
         return $form
             ->schema([
-                Grid::make(2)->schema([
 
-                    // Demande de crédit
-                    Forms\Components\Select::make('demande_credit_id')
-                        ->label('Demande de crédit')
-                        ->relationship('demandeCredit', 'reference')
-                        ->searchable()
-                        ->preload()
-                        ->required()
-                        ->live()
-                        ->afterStateUpdated(function ($state, callable $set) {
+                Wizard::make([
 
-                            $demande = \App\Models\demande_credits::find($state);
+                    // STEP 1 : Demande
+                    Step::make('Demande')
+                        ->schema([
+                            Grid::make(2)->schema([
 
-                            if ($demande) {
-                                //  Auto remplir montant demandé
-                                $set('amount_dema', $demande->montant);
+                                Select::make('demande_credit_id')
+                                    ->label('Demande de crédit')
+                                    ->relationship(
+                                        'demandeCredit',
+                                        'reference',
+                                        fn($query) =>
+                                        $query->where('etat', 'brouillon')
+                                    )
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, callable $set) {
 
-                                //  Auto remplir employé
-                                $set('employee_id', $demande->employee_id);
-                                $set('type_credit_id', $demande->type_credit_id);
-                                $employee = $demande->employee;
-                                if ($employee) {
-                                    $set('account_number', $employee->compte_bank);
-                                }
-                            }
-                        }),
+                                        $demande = \App\Models\demande_credits::find($state);
 
-                    //  Employé (auto rempli mais modifiable si besoin)
-                    Forms\Components\Select::make('employee_id')
-                        ->label('Employé')
-                        ->relationship('employee', 'name')
-                        ->getOptionLabelFromRecordUsing(function ($record) {
-                            return $record->matricule . ' - ' . $record->name . ' ' . $record->last_name;
-                        })
-                        ->searchable()
-                        ->required(),
+                                        if ($demande) {
+                                            $set('amount_dema', $demande->montant);
+                                            $set('employee_id', $demande->employee_id);
+                                            $set('type_credit_id', $demande->type_credit_id);
 
-                    //  Type crédit
-                    Forms\Components\Select::make('type_credit_id')
-                        ->label('Type crédit')
-                        ->relationship('typeCredit', 'title')
-                        ->searchable()
-                        ->preload(),
+                                            if ($demande->employee) {
+                                                $set('account_number', $demande->employee->compte_bank);
+                                            }
+                                        }
+                                    }),
 
-                    //  Montant demandé (readonly auto)
-                    Forms\Components\TextInput::make('amount_dema')
-                        ->label('Montant demandé')
-                        ->numeric()
-                        ->prefix('DZD')
-                        ->readOnly()
-                        ->required(),
+                                Select::make('employee_id')
+                                    ->label('Employé')
+                                    ->relationship('employee', 'name')
+                                    ->getOptionLabelFromRecordUsing(
+                                        fn($record) =>
+                                        $record->matricule . ' - ' . $record->name . ' ' . $record->last_name
+                                    )
 
-                    //  Montant accordé
-                    Forms\Components\TextInput::make('amount_accord')
-                        ->label('Montant accordé')
-                        ->numeric()
-                        ->prefix('DZD')
-                        ->required(),
+                                    ->required(),
 
-                    //  Fournisseur
-                    Forms\Components\TextInput::make('fournisseur')
-                        ->label('Fournisseur'),
+                                TextInput::make('account_number')
+                                    ->label('Compte bancaire')
+                                    ->readOnly(),
 
-                    //  Date paiement
-                    Forms\Components\DatePicker::make('date_amount')
-                        ->label('Date paiement'),
+                            ]),
+                        ]),
 
-                    //  Mode paiement
-                    Forms\Components\Select::make('type_payment')
-                        ->label('Mode paiement')
-                        ->options([
-                            'virement' => 'Virement',
-                            'cheque' => 'Chèque',
-                        ])
-                        ->default('virement')
-                        ->required(),
+                    //  STEP 2 : Crédit
+                    Step::make('Détails Crédit')
+                        ->schema([
+                            Grid::make(2)->schema([
 
-                    //  État
-                    Forms\Components\Select::make('state')
-                        ->label('État')
-                        ->options([
-                            'nouveau' => 'Nouveau',
-                            'en progression' => 'En progression',
-                            'terminer' => 'Terminé',
-                        ])
-                        ->default('nouveau')
-                        ->required(),
+                                Select::make('type_credit_id')
+                                    ->label('Type crédit')
+                                    ->relationship('typeCredit', 'title')
+                                    ->searchable()
+                                    ->preload(),
 
-                    //  Compte bancaire
-                    Forms\Components\TextInput::make('account_number')
-                        ->label('Numéro de compte')
-                        ->readOnly(),
-                ]),
+                                TextInput::make('amount_dema')
+                                    ->label('Montant demandé')
+                                    ->numeric()
+                                    ->prefix('DZD')
+                                    ->readOnly(),
+
+                                TextInput::make('amount_accord')
+                                    ->label('Montant accordé')
+                                    ->numeric()
+                                    ->prefix('DZD')
+                                    ->required()
+                                    ->rule(function (callable $get) {
+                                        return function ($attribute, $value, $fail) use ($get) {
+                                            if ($value > $get('amount_dema')) {
+                                                $fail('Le montant accordé ne peut pas dépasser le montant demandé.');
+                                            }
+                                        };
+                                    }),
+
+                            ]),
+                        ]),
+
+                    // STEP 3 : Paiement
+                    Step::make('Paiement')
+                        ->schema([
+                            Grid::make(2)->schema([
+
+                                Select::make('type_payment')
+                                    ->label('Mode paiement')
+                                    ->options([
+                                        'virement' => 'Virement',
+                                        'cheque' => 'Chèque',
+                                    ])
+                                    ->default('virement')
+                                    ->required(),
+
+                                TextInput::make('refpayement')
+                                    ->label('N° virement / cheque'),
+
+                            ]),
+                        ]),
+
+                    // STEP 4 : Validation (remplace state dropdown)
+                    Step::make('Génération de contrat')
+                        ->schema([
+
+                            DatePicker::make('date_contrat')
+                                ->label('Date contrat'),
+
+                            TextInput::make('amout_retenu')
+                                ->label('Montant de retenu /mois')
+                                ->numeric()
+                                ->prefix('DZD')
+                                ->required(),
+
+                            DatePicker::make('date_retenu')
+                                ->label('Le premier mois du retenu')
+                                ->required()
+                                ->displayFormat('m/Y') // affichage mois/année
+                                ->format('Y-m-d') // stockage DB
+                                ->required()
+                                ->default(now()->startOfMonth())
+                                ->minDate(now()->subYears(10))
+                                ->maxDate(now()->subMonth())
+                                ->dehydrateStateUsing(function ($state) {
+                                    return Carbon::parse($state)->startOfMonth()->format('Y-m-d');
+                                })
+
+                        ]),
+                ])
+                    ->columnSpanFull(),
+
             ]);
     }
 
@@ -144,16 +190,12 @@ class CreditsocialResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->toggleable(), // optionnel, peut masquer
-
-                Tables\Columns\TextColumn::make('amount_dema')
-                    ->label('Montant demandé')
-                    ->money('DZD', true)
-                    ->sortable(),
-
                 Tables\Columns\TextColumn::make('amount_accord')
-                    ->label('Montant accordé')
+                    ->label('Montant ')
                     ->money('DZD', true)
+                    ->searchable()
                     ->sortable(),
+
 
                 Tables\Columns\TextColumn::make('account_number')
                     ->label('Compte bancaire')
@@ -166,22 +208,25 @@ class CreditsocialResource extends Resource
                 Tables\Columns\TextColumn::make('state')
                     ->label('État')
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('date_amount')
-                    ->label('Date paiement')
-                    ->date('d/m/Y')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Créé le')
-                    ->date('d/m/Y H:i')
-                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                Tables\Actions\Action::make('contrat')
+                    ->label('Contrat_Fr')
+                    ->icon('heroicon-o-printer')
+                    ->color('success')
+                    ->url(fn($record) => route('contrat.pdf', $record->id))
+                    ->openUrlInNewTab(),
+
+                Tables\Actions\Action::make('pdf_ar')
+                    ->label('Contrat_AR')
+                    ->icon('heroicon-o-language')
+                    ->url(fn($record) => route('contrat.ar', $record->id))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

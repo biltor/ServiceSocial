@@ -34,14 +34,16 @@ return new class extends Migration
 
             $table->decimal('amount_dema', 12, 2);
 
-            //$table->string('fournisseur')->nullable();
+            $table->decimal('amout_retenu', 12, 2);
 
-
-            $table->date('date_amount')->nullable();
-
+            $table->date('date_contrat')->nullable();
 
             $table->enum('type_payment', ['virement', 'cheque'])
                 ->default('virement');
+                //refference de payement
+            $table->string('refpayement')->nullable();
+
+            $table->date('date_retenu')->nullable();
 
 
             $table->enum('state', ['nouveau', 'en progression', 'terminer'])

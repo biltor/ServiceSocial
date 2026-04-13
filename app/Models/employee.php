@@ -14,6 +14,8 @@ class employee extends Model
         'last_name',
         'last_name_ar',
         'sex',
+        'datenais',
+        'lieux',
         'nin',
         'tel',
         'post',

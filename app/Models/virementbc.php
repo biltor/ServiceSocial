@@ -16,6 +16,11 @@ class virementbc extends Model
         'datevirement',
     ];
 
+        protected $casts = [
+        'datevirement' => 'date',
+        'amount' => 'decimal:2',
+    ];
+
     public function unite()
     {
         return $this->belongsTo(unite::class);

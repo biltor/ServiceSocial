@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('last_name_ar');
             $table->enum('sex', ['Femme', 'Homme'])->default('Homme');
+            $table->date('datenais');
+            $table->string('lieux');
             $table->string('nin');
             $table->string('tel');
             $table->string('post');

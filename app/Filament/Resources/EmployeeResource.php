@@ -78,6 +78,14 @@ class EmployeeResource extends Resource
                             Forms\Components\TextInput::make('last_name_ar')
                                 ->label('الإسم')
                                 ->required(),
+                            Forms\Components\DatePicker::make('datenais')
+                                ->label('Date de naissance'),
+
+                            Forms\Components\Select::make('lieux')
+                                ->label('Lieux de naissance')
+                                ->options(\App\Enums\wilyas::options())
+                                ->searchable(),
+                            
 
                         ]),
 
@@ -158,7 +166,7 @@ class EmployeeResource extends Resource
 
                 \Filament\Tables\Columns\TextColumn::make('tel'),
 
-                \Filament\Tables\Columns\TextColumn::make('compte_bank')
+                \Filament\Tables\Columns\TextColumn::make('bank_account_id')
                     ->label('Compte'),
 
                 \Filament\Tables\Columns\TextColumn::make('created_at')

@@ -23,7 +23,7 @@ class DemandeCreditResource extends Resource
     protected static ?string $model = demande_credits::class;
 
     protected static ?string $navigationGroup = 'Service Social';
-  protected ?string $heading = 'Demande credit';
+    protected ?string $heading = 'Demande credit';
     protected static ?string $navigationLabel = 'Demande de crédit';
 
     protected static ?string $navigationIcon = 'heroicon-o-document-check';
@@ -44,8 +44,6 @@ class DemandeCreditResource extends Resource
                         ->dehydrated(),
 
                 ]),
-
-
 
                 //  SECTION 1
                 Section::make('Informations générales')
@@ -72,7 +70,7 @@ class DemandeCreditResource extends Resource
                                 ->required(),
 
                             Forms\Components\TextInput::make('montant')
-                                ->label('Montant')
+                                ->label('Montant Demander')
                                 ->numeric()
                                 ->prefix('DA')
                                 ->required(),
@@ -99,13 +97,12 @@ class DemandeCreditResource extends Resource
 
                         Forms\Components\FileUpload::make('attachment')
                             ->label('Pièce jointe')
+                            ->disk('public') // 🔥 IMPORTANT
                             ->directory('demande_credits')
-                            ->visibility('public')
                             ->visibility('public')
                             ->openable()
                             ->downloadable()
                             ->previewable()
-
                     ]),
 
                 // SECTION 4
@@ -114,11 +111,7 @@ class DemandeCreditResource extends Resource
 
                         Forms\Components\Textarea::make('note')
                             ->rows(3),
-
                     ]),
-
-
-
             ]);
     }
 
@@ -167,7 +160,13 @@ class DemandeCreditResource extends Resource
 
                 \Filament\Tables\Columns\IconColumn::make('attachment')
                     ->label('Fichier')
-                    ->icon(fn($state) => $state ? 'heroicon-o-paper-clip' : null),
+                    ->icon(fn($state) => $state ? 'heroicon-o-paper-clip' : null)
+                    ->url(
+                        fn($record) => $record->attachment
+                            ? asset('storage/' . $record->attachment)
+                            : null
+                    )
+                    ->openUrlInNewTab(),
 
 
                 \Filament\Tables\Columns\BadgeColumn::make('etat')

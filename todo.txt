@@ -18,5 +18,22 @@ demande de crédit
        --------------
  credit
     - Validé une demande de credit apartire d'un crédit social (ou le contraire créer directement un credit apartire d'une demande validé )
-    - 
-    - 
+    - amount_retenu le montant de retenu par mois
+    - génération du contrat
+
+---------------------------
+relevé ou compte :
+
+    - chaque crédit validé → mouvement bancaire (débit)
+    - chaque virement → mouvement bancaire (débit/crédit)
+    - avoir un relevé bancaire unique (ledger)
+    - tout centralisé dans une table mouvements
+    - exactement comme un journal comptable
+    - voici un une explication d'opérations resumé en tablau  
+      
+
+| libelé                  | opérations    | date operation     |
+| ----------------------- | ------------- | -------------------|
+| don pour le compte 2215 |  debit        |                    |
+| virement ref 12569      | `credit`      | 30/01/2026         |
+

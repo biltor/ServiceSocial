@@ -69,9 +69,9 @@ class VirementResource extends Resource
 
                 \Filament\Tables\Columns\TextColumn::make('unite.name')
                     ->label('Unité'),
-
-                \Filament\Tables\Columns\TextColumn::make('bankAccount.n_compte')
-                    ->label('Compte'),
+                \Filament\Tables\Columns\TextColumn::make('unite.activeBankAccount.n_compte')
+                   ->label('Compte bancaire')
+                   ->placeholder('Aucun compte'),
 
                 \Filament\Tables\Columns\TextColumn::make('amount')
                     ->color('success')
