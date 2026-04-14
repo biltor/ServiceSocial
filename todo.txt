@@ -37,3 +37,7 @@ relevé ou compte :
 | don pour le compte 2215 |  debit        |                    |
 | virement ref 12569      | `credit`      | 30/01/2026         |
 
+Configuration Général 
+   - chaque poste a un solde maximal selon le type  
+   - representant  Service social par unité et par années  
+   - 
