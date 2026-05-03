@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class retenu extends Model
+class demandepaiement extends Model
 {
-    
-    
+    //
 }
