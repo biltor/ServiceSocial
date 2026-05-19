@@ -1,4 +1,4 @@
-dons / credits 
+dons / credits
    - regles :
        - règles différentes (don ≠ crédit)
        - remboursement automatique (crédit)
@@ -29,15 +29,28 @@ relevé ou compte :
     - avoir un relevé bancaire unique (ledger)
     - tout centralisé dans une table mouvements
     - exactement comme un journal comptable
-    - voici un une explication d'opérations resumé en tablau  
-      
+    - voici un une explication d'opérations resumé en tablau
+
 
 | libelé                  | opérations    | date operation     |
 | ----------------------- | ------------- | -------------------|
 | don pour le compte 2215 |  debit        |                    |
 | virement ref 12569      | `credit`      | 30/01/2026         |
 
-Configuration Général 
-   - chaque poste a un solde maximal selon le type  
-   - representant  Service social par unité et par années  
-   - 
+Configuration Général
+   - chaque poste a un solde maximal selon le type
+   - representant  Service social par unité et par années
+
+
+restriction
+  - un agent social ne peut pas supprimer les demandes qui on pas été créer pas lui meme
+  - l peut pas supprimer une demainde qui a un credit confirmé avec contrat
+  - il peut pas supprimer un credt à un retenu
+
+dashboard
+  - nombre des demandes non traité status brouillon
+  - montant Total des virements de cette année
+  - montant total des retenus cette années ou par mois
+  - dernier evenements
+  - drnier crédit
+

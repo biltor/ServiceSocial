@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('name_ar');
             $table->string('last_name');
+            $table->boolean('is_active')
+            ->default(true);
             $table->string('last_name_ar');
             $table->enum('sex', ['Femme', 'Homme'])->default('Homme');
             $table->date('datenais');

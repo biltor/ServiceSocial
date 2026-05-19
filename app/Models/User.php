@@ -46,6 +46,16 @@ class User extends Authenticatable
 
 
 
+    public function unites()
+    {
+        return $this->belongsToMany(
+            unite::class,
+            'company_user',
+            'user_id',
+            'unite_id'
+        );
+    }
+
 
     public function canAccessPanel(Panel $panel): bool
     {

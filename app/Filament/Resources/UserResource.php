@@ -14,6 +14,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserResource extends Resource
 {
@@ -25,6 +27,39 @@ class UserResource extends Resource
 
 
     // Accessible uniquement au super_admin
+    protected static function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user?->hasRole('super_admin') ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canEdit($record): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canDelete($record): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::isSuperAdmin();
+    }
+
 
 
     public static function form(Form $form): Form
@@ -52,6 +87,12 @@ class UserResource extends Resource
                             ->dehydrated(fn($state) => filled($state))
                             ->required(fn(string $operation) => $operation === 'create')
                             ->placeholder('Laisser vide pour ne pas modifier'),
+
+                        Forms\Components\Select::make('unites')
+                            ->multiple()
+                            ->relationship('unites', 'name')
+                            ->preload()
+                            ->searchable(),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Rôle & Employé')

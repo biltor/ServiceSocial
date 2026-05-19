@@ -14,9 +14,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Traits\HasRoleAccess;
 
+
 class EmployeeResource extends Resource
 {
-        use HasRoleAccess;
+    use HasRoleAccess;
 
     protected static ?string $model = employee::class;
 
@@ -32,119 +33,126 @@ class EmployeeResource extends Resource
         return ['RH'];
     }
 
+
+
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                   Forms\Components\Tabs::make('Employee Tabs')
-            ->tabs([
+                Forms\Components\Tabs::make('Employee Tabs')
+                    ->tabs([
 
-                //  Onglet 1 : Identité
-                Forms\Components\Tabs\Tab::make('Informations Personnel')
-                    ->icon('heroicon-o-user')
-                    ->schema([
+                        //  Onglet 1 : Identité
+                        Forms\Components\Tabs\Tab::make('Informations Personnel')
+                            ->icon('heroicon-o-user')
+                            ->schema([
 
-                        Forms\Components\Grid::make(3)->schema([
+                                Forms\Components\Grid::make(3)->schema([
 
-                            Forms\Components\TextInput::make('matricule')
-                                ->numeric()
-                                ->required()
-                                ->unique(ignoreRecord: true),
+                                    Forms\Components\TextInput::make('matricule')
+                                        ->numeric()
+                                        ->required()
+                                        ->unique(ignoreRecord: true),
 
-                            Forms\Components\Select::make('sex')
-                                ->options([
-                                    'Homme' => 'Homme',
-                                    'Femme' => 'Femme',
-                                ])
-                                ->required(),
+                                    Forms\Components\Select::make('sex')
+                                        ->options([
+                                            'Homme' => 'Homme',
+                                            'Femme' => 'Femme',
+                                        ])
+                                        ->required(),
 
-                            Forms\Components\TextInput::make('nin')
-                                ->label('NIN')
-                                ->length(18)
-                                ->required(),
+                                    Forms\Components\TextInput::make('nin')
+                                        ->label('NIN')
+                                        ->length(18)
+                                        ->required(),
 
-                        ]),
+                                ]),
 
-                        Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\Grid::make(2)->schema([
 
-                            Forms\Components\TextInput::make('name')
-                                ->label('Nom')
-                                ->required(),
+                                    Forms\Components\TextInput::make('name')
+                                        ->label('Nom')
+                                        ->required(),
 
-                            Forms\Components\TextInput::make('last_name')
-                                ->label('Prénom')
-                                ->required(),
+                                    Forms\Components\TextInput::make('last_name')
+                                        ->label('Prénom')
+                                        ->required(),
 
-                        ]),
+                                ]),
 
-                        Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\Grid::make(2)->schema([
 
-                            Forms\Components\TextInput::make('name_ar')
-                                ->label('اللقب')
-                                ->required(),
+                                    Forms\Components\TextInput::make('name_ar')
+                                        ->label('اللقب')
+                                        ->required(),
 
-                            Forms\Components\TextInput::make('last_name_ar')
-                                ->label('الإسم')
-                                ->required(),
-                            Forms\Components\DatePicker::make('datenais')
-                                ->label('Date de naissance'),
+                                    Forms\Components\TextInput::make('last_name_ar')
+                                        ->label('الإسم')
+                                        ->required(),
+                                    Forms\Components\DatePicker::make('datenais')
+                                        ->label('Date de naissance'),
 
-                            Forms\Components\Select::make('lieux')
-                                ->label('Lieux de naissance')
-                                ->options(\App\Enums\wilyas::options())
-                                ->searchable(),
+                                    Forms\Components\Select::make('lieux')
+                                        ->label('Lieux de naissance')
+                                        ->options(\App\Enums\wilyas::options())
+                                        ->searchable(),
 
 
-                        ]),
+                                ]),
 
-                    ]),
+                            ]),
 
-                //  Onglet 2 : Travail
-                Forms\Components\Tabs\Tab::make('Professionnel')
-                    ->icon('heroicon-o-building-office')
-                    ->schema([
+                        //  Onglet 2 : Travail
+                        Forms\Components\Tabs\Tab::make('Professionnel')
+                            ->icon('heroicon-o-building-office')
+                            ->schema([
 
-                        Forms\Components\Select::make('unite_id')
-                            ->label('Unité')
-                            ->relationship('unite', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
+                                Forms\Components\Select::make('unite_id')
+                                    ->label('Unité')
+                                    ->relationship('unite', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(),
 
-                        Forms\Components\TextInput::make('post')
-                            ->label('Poste')
-                            ->required(),
+                                Forms\Components\TextInput::make('post')
+                                    ->label('Poste')
+                                    ->required(),
+                                Forms\Components\Toggle::make('is_active')
+                                    ->label('Employé actif')
+                                    ->default(true)
+                                    ->inline(false),
 
-                    ]),
+                            ]),
 
-                //  Onglet 3 : Contact
-                Forms\Components\Tabs\Tab::make('Contact')
-                    ->icon('heroicon-o-phone')
-                    ->schema([
+                        //  Onglet 3 : Contact
+                        Forms\Components\Tabs\Tab::make('Contact')
+                            ->icon('heroicon-o-phone')
+                            ->schema([
 
-                        Forms\Components\TextInput::make('tel')
-                            ->tel()
-                            ->prefix('+213')
-                            ->required(),
+                                Forms\Components\TextInput::make('tel')
+                                    ->tel()
+                                    ->prefix('+213')
+                                    ->required(),
 
-                    ]),
-                // ongle 4 comptabilité
-                 Forms\Components\Tabs\Tab::make('Banque')
-                          ->icon('heroicon-o-credit-card')
-                          ->schema([
-                        Forms\Components\Select::make('bank_name')
-                            ->label('Banque')
-                            ->options(\App\Enums\AlgerianBank::options())
-                            ->searchable()
-                           ->placeholder('Sélectionner une banque'),
+                            ]),
+                        // ongle 4 comptabilité
+                        Forms\Components\Tabs\Tab::make('Banque')
+                            ->icon('heroicon-o-credit-card')
+                            ->schema([
+                                Forms\Components\Select::make('bank_name')
+                                    ->label('Banque')
+                                    ->options(\App\Enums\AlgerianBank::options())
+                                    ->searchable()
+                                    ->placeholder('Sélectionner une banque'),
 
-                        Forms\Components\TextInput::make('compte_bank')
-                            ->label('RIB')
-                            ->required(),
-            ]),
+                                Forms\Components\TextInput::make('compte_bank')
+                                    ->label('RIB')
+                                    ->required(),
+                            ]),
 
-            ])
-            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull(),
 
 
 
@@ -164,6 +172,10 @@ class EmployeeResource extends Resource
 
                 \Filament\Tables\Columns\TextColumn::make('last_name')
                     ->label('Prénom'),
+
+                Tables\Columns\IconColumn::make('is_active')
+                    ->label('Statut')
+                    ->boolean(),
 
                 \Filament\Tables\Columns\TextColumn::make('unite.name')
                     ->label('Unité'),

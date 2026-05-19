@@ -22,6 +22,16 @@ class unite extends Model
         return $this->hasOne(bank_account::class)->where('is_active', true);
     }
 
+public function users()
+{
+    return $this->belongsToMany(
+        User::class,
+        'company_user',
+        'unite_id',
+        'user_id'
+    );
+}
+
     public function employees()
     {
         return $this->hasMany(Employee::class);

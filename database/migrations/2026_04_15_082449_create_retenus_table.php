@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('retenus', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('employee_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->foreignId('credit_id')
+                ->constrained('creditsocials')
+                ->cascadeOnDelete();
+            $table->decimal('amount', 15, 2);
+            $table->date('date_retenu');
             $table->timestamps();
         });
     }

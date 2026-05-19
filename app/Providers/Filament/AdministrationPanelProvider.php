@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Pages\Auth\Login;
 
 class AdministrationPanelProvider extends PanelProvider
 {
@@ -27,7 +28,7 @@ class AdministrationPanelProvider extends PanelProvider
             ->default()
             ->id('administration')
             ->path('administration')
-            ->login()
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::hex('#1e4d35'),
                 'success' => Color::hex('#3a9d68'),

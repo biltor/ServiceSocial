@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\CompanyScope;
 
 
 class employee extends Model
@@ -13,6 +14,7 @@ class employee extends Model
         'name',
         'name_ar',
         'last_name',
+        'is_active',
         'last_name_ar',
         'sex',
         'datenais',
@@ -44,4 +46,10 @@ class employee extends Model
     {
         return $this->hasMany(\App\Models\creditsocial::class);
     }
+
+
+protected static function booted()
+{
+    static::addGlobalScope(new CompanyScope);
+}
 }
