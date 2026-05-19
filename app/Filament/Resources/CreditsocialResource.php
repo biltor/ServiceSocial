@@ -21,13 +21,20 @@ use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Components\Section;
 use Carbon\Carbon;
 use Filament\Tables\Actions\Action;
-
+use App\Filament\Traits\HasRoleAccess;
 class CreditsocialResource extends Resource
 {
+
+        use HasRoleAccess;
     protected static ?string $model = Creditsocial::class;
 
     protected static ?string $navigationGroup = 'Service Social';
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
+
+    protected static function getAllowedRoles(): array
+    {
+        return ['Service Social'];
+    }
 
     public static function form(Form $form): Form
     {

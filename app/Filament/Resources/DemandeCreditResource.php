@@ -17,9 +17,11 @@ use Filament\Forms\Components\Placeholder;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Grid;
-
+use App\Filament\Traits\HasRoleAccess;
 class DemandeCreditResource extends Resource
 {
+
+        use HasRoleAccess;
     protected static ?string $model = demande_credits::class;
 
     protected static ?string $navigationGroup = 'Service Social';
@@ -27,6 +29,11 @@ class DemandeCreditResource extends Resource
     protected static ?string $navigationLabel = 'Demande de crédit';
 
     protected static ?string $navigationIcon = 'heroicon-o-document-check';
+
+    protected static function getAllowedRoles(): array
+    {
+        return ['Service Social'];
+    }
 
     public static function form(Form $form): Form
     {

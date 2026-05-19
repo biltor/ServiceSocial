@@ -13,14 +13,21 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HasRoleAccess;
 
 class UniteResource extends Resource
 {
+            use HasRoleAccess;
     protected static ?string $model = unite::class;
 
 
     protected static ?string $navigationGroup = 'Ressource Humaines';
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
+
+        protected static function getAllowedRoles(): array
+    {
+        return ['RH'];
+    }
 
     public static function form(Form $form): Form
     {

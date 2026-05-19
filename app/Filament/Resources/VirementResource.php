@@ -13,14 +13,21 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use App\Filament\Traits\HasRoleAccess;
 class VirementResource extends Resource
 {
+            use HasRoleAccess;
+
     protected static ?string $model = virementbc::class;
     protected static ?string $navigationGroup = 'Comptabilité';
 
     protected static ?string $navigationLabel = 'Virement';
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
+        protected static function getAllowedRoles(): array
+    {
+        return ['Comptabilité','Service Social'];
+    }
 
     public static function form(Form $form): Form
     {

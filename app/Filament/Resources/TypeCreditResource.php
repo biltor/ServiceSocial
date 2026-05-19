@@ -12,9 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use App\Filament\Traits\HasRoleAccess;
 class TypeCreditResource extends Resource
 {
+
+        use HasRoleAccess;
     protected static ?string $model = typecredit::class;
 
 
@@ -22,6 +24,12 @@ class TypeCreditResource extends Resource
     protected static ?string $navigationLabel = 'Types de credit';
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
+
+    protected static function getAllowedRoles(): array
+    {
+        return ['Service Social'];
+    }
+
 
     public static function form(Form $form): Form
     {

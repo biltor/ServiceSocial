@@ -12,9 +12,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HasRoleAccess;
 
 class MouvementBanqueResource extends Resource
 {
+        use HasRoleAccess;
+
     protected static ?string $model = mouvementBanque::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
@@ -22,6 +25,11 @@ class MouvementBanqueResource extends Resource
     protected static ?string $navigationGroup = 'Comptabilité';
 
     protected static ?string $navigationLabel = 'Mouvements';
+
+    protected static function getAllowedRoles(): array
+    {
+        return ['Comptabilité','Service Social'];
+    }
 
 
     public static function canCreate(): bool

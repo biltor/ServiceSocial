@@ -13,20 +13,31 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HasRoleAccess;
 
 class ContratResource extends Resource
 {
+    use HasRoleAccess;
+
+
     protected static ?string $model = contrats::class;
-      protected static ?string $navigationGroup = 'Service Social';
+    protected static ?string $navigationGroup = 'Service Social';
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
+
+    protected static function getAllowedRoles(): array
+    {
+        return ['Service Social','RH'];
+    }
     public static function canCreate(): bool
     {
         return false;
     }
 
     public static function canEdit($record): bool
-    {        return false;    }
+    {
+        return false;
+    }
 
     public static function canDelete($record): bool
     {
@@ -35,11 +46,7 @@ class ContratResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                
-
-
-            ]);
+            ->schema([]);
     }
 
     public static function table(Table $table): Table
@@ -50,11 +57,11 @@ class ContratResource extends Resource
                 Tables\Columns\TextColumn::make('employee.name')->label('Employé'),
                 Tables\Columns\TextColumn::make('type')->label('Type'),
                 Tables\Columns\TextColumn::make('amount')
-                ->label('Montant accordé')
-                ->money('DZD'),
+                    ->label('Montant accordé')
+                    ->money('DZD'),
                 Tables\Columns\TextColumn::make('amount_retenu')
-                ->label('Montant Retenu/mois')
-                ->money('DZD'),
+                    ->label('Montant Retenu/mois')
+                    ->money('DZD'),
                 Tables\Columns\TextColumn::make('start_date')->date(),
                 Tables\Columns\TextColumn::make('end_date')->date(),
                 Tables\Columns\IconColumn::make('state'),
@@ -63,13 +70,12 @@ class ContratResource extends Resource
                 //
             ])
             ->actions([
-                 Tables\Actions\ViewAction::make(), 
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-/*                 Tables\Actions\BulkActionGroup::make([
+                /*                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]), */
-            ]);
+                ]), */]);
     }
 
     public static function getRelations(): array
