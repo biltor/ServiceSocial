@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-
+use App\Models\employee;
+use App\Models\BelongsTo;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable ,HasRoles;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -37,10 +38,22 @@ class User extends Authenticatable
     ];
 
 
-        public function canAccessPanel(Panel $panel): bool
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+
+
+
+    public function canAccessPanel(Panel $panel): bool
     {
         return true; // Le filtre se fait par rôle dans les Resources
     }
+
+
+
 
     /**
      * Get the attributes that should be cast.

@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class employee extends Model
 {
-     protected $fillable = [
+    protected $fillable = [
         'unite_id',
         'matricule',
         'name',
@@ -28,8 +29,19 @@ class employee extends Model
         return $this->belongsTo(unite::class);
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->name} {$this->last_name}";
+    }
+
+
     public function creditSocials()
-{
-    return $this->hasMany(\App\Models\creditsocial::class);
-}
+    {
+        return $this->hasMany(\App\Models\creditsocial::class);
+    }
 }
