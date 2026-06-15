@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Scopes\CompanyScope;
 
 
+
 class employee extends Model
 {
     protected $fillable = [
@@ -46,10 +47,13 @@ class employee extends Model
     {
         return $this->hasMany(\App\Models\creditsocial::class);
     }
+<<<<<<< HEAD
 
 
 protected static function booted()
 {
     static::addGlobalScope(new CompanyScope);
 }
+=======
+>>>>>>> 0ffb82d (working on)
 }
